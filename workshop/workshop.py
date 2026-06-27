@@ -1,48 +1,9 @@
-from fastapi import FastAPI, UploadFile, File
-import shutil
-import os
-from ocr.model import read_odometer
+from fastapi import FastAPI
 from supabase_client import supabase
 from math import radians, sin, cos, sqrt, atan2
 import uvicorn
 
-
 app = FastAPI()
-
-# buat folder uploads jika belum ada
-os.makedirs("uploads", exist_ok=True)
-
-
-@app.post("/ocr")
-async def ocr_image(file: UploadFile = File(...)):
-    try:
-
-        # ambil extension asli
-        ext = file.filename.split(".")[-1]
-
-        # nama file baru
-        path = f"uploads/temp.{ext}"
-
-        # simpan file
-        with open(path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
-
-        # OCR
-        hasil = read_odometer(path)
-
-        return {
-            "success": True,
-            "odometer": hasil
-        }
-
-    except Exception as e:
-        return {
-            "success": False,
-            "error": str(e)
-        }
-    
-    from fastapi import FastAPI
-
 
 
 def haversine(lat1, lon1, lat2, lon2):
@@ -112,6 +73,7 @@ def get_workshop():
 
     return data
 
+
 @app.get("/workshop/nearest")
 def nearest_workshop(
     lat: float,
@@ -167,6 +129,7 @@ def nearest_workshop(
         "data": result[:limit]
     }
 
+
 @app.get("/workshop/{workshop_id}")
 def get_workshop_detail(workshop_id: int):
 
@@ -180,6 +143,8 @@ def get_workshop_detail(workshop_id: int):
     )
 
     return response.data
+
+
 
 if __name__ == "__main__":
     uvicorn.run(

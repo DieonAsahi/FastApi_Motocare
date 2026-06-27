@@ -1,12 +1,28 @@
-from paddleocr import PaddleOCR
+import traceback
 import cv2
 import re
+import os
+
+os.environ["FLAGS_use_mkldnn"] = "0"
+
+from paddleocr import PaddleOCR
 
 ocr = PaddleOCR(use_angle_cls=False, lang='en')
+print("OCR siap")
 
 def read_odometer(image_path):
+    print("OCR START:", image_path)
 
-    result = ocr.ocr(image_path)
+    try:
+        result = ocr.ocr(image_path)
+
+        print("OCR RESULT:")
+        print(result)
+
+    except Exception as e:
+        print("OCR ERROR:")
+        traceback.print_exc()
+        raise e
 
     detected = []
 
