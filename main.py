@@ -40,10 +40,6 @@ async def ocr_image(file: UploadFile = File(...)):
             "success": False,
             "error": str(e)
         }
-    
-    from fastapi import FastAPI
-
-
 
 def haversine(lat1, lon1, lat2, lon2):
     R = 6371
